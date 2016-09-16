@@ -2,10 +2,17 @@
 const dataUrl = 'http://api.kf.mattstyles.me/catalog'
 // const dataUrl = 'http://localhost:3000/catalog'
 
+const createNode = node => {
+  return {
+    text: node.name,
+    type: node.children ? 'category' : 'product'
+  }
+}
+
 const walker = ({key, data}) => {
   // If no key supplied then provide the tree root
   if (!key) {
-    return data.children.map(child => child.name)
+    return data.children.map(createNode)
   }
 
   // Use reducer to depth-first search the tree for the
@@ -16,7 +23,7 @@ const walker = ({key, data}) => {
   }, data)
 
   // Return just the names for now
-  return roots.children.map(child => child.name)
+  return roots.children.map(createNode)
 }
 
 class CatalogStore {

@@ -7,6 +7,7 @@ import {
 } from 'react-native'
 
 import TouchableRow from '../components/list/touchableRow'
+import SearchView from './search'
 
 import catalogStore from '../stores/catalog'
 
@@ -38,12 +39,10 @@ export default class NavigationView extends Component {
         this.setState({
           ds: src.cloneWithRows(data.map(item => {
             return {
-              text: item,
+              text: item.text,
               onPress: event => {
-                console.log('pressed:', item)
-                this.onNavigateTo(this.props.root
-                  ? this.props.root + '.' + item
-                  : item)
+                console.log('navigation node pressed:', item)
+                this.onNavigateTo(item)
               }
             }
           }))
@@ -51,15 +50,37 @@ export default class NavigationView extends Component {
       })
   }
 
-  onNavigateTo (key) {
-    let title = key.split('.').pop()
-    this.props.navigator.push(Object.assign(NavigationView.navigatorOptions, {
-      title: title,
-      passProps: {
+  onNavigateTo (node) {
+    let path = this.props.root
+      ? this.props.root + '.' + node.text
+      : node.text
+    let title = path.split('.').pop()
+
+    if (node.type === 'category') {
+      this.props.navigator.push(Object.assign(NavigationView.navigatorOptions, {
         title: title,
-        root: key
-      }
-    }))
+        passProps: {
+          title: title,
+          root: path
+        }
+      }))
+      return
+    }
+
+    if (node.type === 'product') {
+      console.log('Product reached:', node.text)
+      this.props.navigator.push(Object.assign(SearchView.navigatorOptions, {
+        title: title,
+        passProps: {
+          searchBar: false,
+          searchKey: title
+        }
+      }))
+      return
+    }
+
+    // Should never get here, but lets at least have some warning if we do
+    console.log('INVALID NAVIGATION NODE')
   }
 
   render () {
