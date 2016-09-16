@@ -1,6 +1,6 @@
 
-// const dataUrl = 'http://api.kf.mattstyles.me/catalog'
-const dataUrl = 'http://localhost:3000/catalog'
+const dataUrl = 'http://api.kf.mattstyles.me/catalog'
+// const dataUrl = 'http://localhost:3000/catalog'
 
 const walker = ({key, data}) => {
   // If no key supplied then provide the tree root
@@ -30,6 +30,10 @@ class CatalogStore {
       .then(res => {
         this.data = res[0]
         return this.data
+      })
+      .catch(err => {
+        console.log('fetch error')
+        console.error(err)
       })
   }
 
