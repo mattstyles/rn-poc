@@ -1,12 +1,13 @@
 
 import React, {Component} from 'react'
 import {
-  Text,
   View,
-  TouchableOpacity
+  ListView,
+  Text
 } from 'react-native'
 
-import NavigationView from './navigation'
+import TouchableRow from '../components/list/touchableRow'
+import searchStore from '../stores/search'
 
 export default class SearchView extends Component {
   static navigatorOptions = {
@@ -21,40 +22,53 @@ export default class SearchView extends Component {
     drawUnderTabBar: true
   }
 
-  constructor (props) {
-    super(props)
-
-    this.toggleTabs = true
+  state = {
+    ds: null
   }
 
-  onToggle = event => {
-    this.toggleTabs = !this.toggleTabs
-    this.props.navigator.toggleTabs({
-      to: this.toggleTabs
-        ? 'shown'
-        : 'hidden',
-      animated: true
+  componentWillMount () {
+    console.log('search:mounting')
+    console.log(this.props)
+
+    if (this.props.searchKey) {
+      searchStore
+        .get(this.props.searchKey)
+        .then(this.onResults)
+    }
+  }
+
+  onResults = res => {
+    const src = new ListView.DataSource({
+      rowHasChanged: (a, b) => a !== b
+    })
+
+    this.setState({
+      ds: src.cloneWithRows(res.map(item => {
+        return {
+          text: item.title,
+          onPress: event => {
+            console.log('Search node pressed:', item)
+          }
+        }
+      }))
     })
   }
 
-  onPush = event => {
-    this.props.navigator.push(Object.assign(NavigationView.navigatorOptions, {
-      passProps: {
-        foo: 'bar'
-      }
-    }))
-  }
-
   render () {
-    return (
-      <View style={{flex: 1, padding: 20}}>
-        <TouchableOpacity onPress={this.onToggle}>
-          <Text>Search</Text>
-        </TouchableOpacity>
+    if (!this.state.ds) {
+      return (
+        <View style={{flex: 1, padding: 16}}>
+          <Text>Search View</Text>
+        </View>
+      )
+    }
 
-        <TouchableOpacity onPress={this.onPush}>
-          <Text>Push</Text>
-        </TouchableOpacity>
+    return (
+      <View style={{flex: 1}}>
+        <ListView
+          dataSource={this.state.ds}
+          renderRow={TouchableRow}
+        />
       </View>
     )
   }

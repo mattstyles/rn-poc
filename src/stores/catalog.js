@@ -53,7 +53,7 @@ class CatalogStore {
         }))
     }
 
-    // Don't unleash zalgo, promisify even if available
+    // Cage zalgo
     return Promise.resolve(walker({
       key: key,
       data: this.data
