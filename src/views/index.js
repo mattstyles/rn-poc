@@ -1,11 +1,15 @@
 
 import {Navigation} from 'react-native-navigation'
 
+// Tabbed views
 import HomeView from './home'
 import SearchView from './search'
-import PushView from './pushed'
 import PaymentView from './payment'
 import BasketView from './basket'
+
+// Page Views
+import PushView from './pushed'
+import NavigationView from './navigation'
 
 const register = View => {
   Navigation.registerComponent(
@@ -18,8 +22,9 @@ export function registerViews () {
   [
     HomeView,
     SearchView,
-    PushView,
     PaymentView,
-    BasketView
+    BasketView,
+    PushView,
+    NavigationView
   ].forEach(register)
 }

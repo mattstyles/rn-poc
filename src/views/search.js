@@ -6,7 +6,7 @@ import {
   TouchableOpacity
 } from 'react-native'
 
-import PushView from './pushed'
+import NavigationView from './navigation'
 
 export default class SearchView extends Component {
   static navigatorOptions = {
@@ -38,7 +38,7 @@ export default class SearchView extends Component {
   }
 
   onPush = event => {
-    this.props.navigator.push(Object.assign(PushView.navigatorOptions, {
+    this.props.navigator.push(Object.assign(NavigationView.navigatorOptions, {
       passProps: {
         foo: 'bar'
       }
