@@ -38,7 +38,6 @@ export default class HomeView extends Component {
   }
 
   render () {
-    console.log(this.state)
     return (
       <View style={{flex: 1, padding: 0}}>
         <ListView

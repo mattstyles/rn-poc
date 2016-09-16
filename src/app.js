@@ -7,7 +7,10 @@ import SearchView from './views/search'
 import BasketView from './views/basket'
 import PaymentView from './views/payment'
 
+import catalog from './stores/catalog'
+
 registerViews()
+catalog.fetch()
 
 const getNavigatorOptions = list => {
   return list.map(item => item.navigatorOptions)

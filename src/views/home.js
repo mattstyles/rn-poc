@@ -4,9 +4,10 @@ import {
   Text,
   View
 } from 'react-native'
-import debounce from 'debounce'
 
 import NavigationView from './navigation'
+
+var lastNavId = null
 
 export default class HomeView extends Component {
   static navigatorOptions = {
@@ -34,15 +35,31 @@ export default class HomeView extends Component {
     super(props)
 
     // @TODO this debounce is a hack, the navigator events are firing twice for some reason
-    this.props.navigator.setOnNavigatorEvent(debounce(this.onNavigationEvent, 300, true))
+    // this.props.navigator.setOnNavigatorEvent(debounce(this.onNavigationEvent, 300, true))
+    this.props.navigator.setOnNavigatorEvent(this.onNavigationEvent)
   }
 
   onNavigationEvent = event => {
     if (event.type === 'NavBarButtonPress') {
       if (event.id === 'navigation') {
+        // @TODO this debounce hack fixes a double tap issue which should
+        // be fixed in React-Native-Navigation
+        if (lastNavId === 'navigation') {
+          return
+        }
+        lastNavId = 'navigation'
+
         this.props.navigator.push(Object.assign(NavigationView.navigatorOptions, {
-          title: 'Home'
+          title: 'Navigation',
+          passProps: {
+            title: null,
+            root: null
+          }
         }))
+
+        setTimeout(() => {
+          lastNavId = null
+        }, 300)
       }
     }
   }
