@@ -7,8 +7,20 @@ class SearchStore {
     this.data = null
   }
 
-  get (query) {
+  getCategory (query) {
     return fetch(`${dataUrl}?category=${query}`)
+      .then(res => res.json())
+      .then(res => {
+        return res
+      })
+      .catch(err => {
+        console.log('category search fetch error')
+        console.error(err)
+      })
+  }
+
+  getQuery (query) {
+    return fetch(`${dataUrl}?q=${query}&per_page=100`)
       .then(res => res.json())
       .then(res => {
         return res

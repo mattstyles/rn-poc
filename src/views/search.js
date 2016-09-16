@@ -5,9 +5,19 @@ import {
   ListView,
   Text
 } from 'react-native'
+import SearchBar from 'react-native-search-bar'
 
 import TouchableRow from '../components/list/touchableRow'
 import searchStore from '../stores/search'
+
+const searchMapper = item => {
+  return {
+    text: item.title,
+    onPress: event => {
+      console.log('Search node pressed:', item)
+    }
+  }
+}
 
 export default class SearchView extends Component {
   static navigatorOptions = {
@@ -19,52 +29,71 @@ export default class SearchView extends Component {
   }
 
   static navigatorStyle = {
-    drawUnderTabBar: true
+    drawUnderTabBar: false
+  }
+
+  static defaultProps = {
+    searchBar: true,
+    searchKey: null
   }
 
   state = {
-    ds: null
+    ds: new ListView.DataSource({
+      rowHasChanged: (a, b) => a !== b
+    })
   }
 
+  // @TODO Warning: anti-pattern. Handle async loading properly
+  _isMounted = false
+
   componentWillMount () {
-    console.log('search:mounting')
-    console.log(this.props)
+    this._isMounted = true
 
     if (this.props.searchKey) {
       searchStore
-        .get(this.props.searchKey)
+        .getCategory(this.props.searchKey)
         .then(this.onResults)
     }
   }
 
+  componentWillUnmount () {
+    this._isMounted = false
+  }
+
   onResults = res => {
-    const src = new ListView.DataSource({
-      rowHasChanged: (a, b) => a !== b
-    })
+    if (!this._isMounted) {
+      return
+    }
+
+    let data = res.map(searchMapper)
 
     this.setState({
-      ds: src.cloneWithRows(res.map(item => {
-        return {
-          text: item.title,
-          onPress: event => {
-            console.log('Search node pressed:', item)
-          }
-        }
-      }))
+      ds: this.state.ds.cloneWithRows(data)
     })
   }
 
-  render () {
-    if (!this.state.ds) {
-      return (
-        <View style={{flex: 1, padding: 16}}>
-          <Text>Search View</Text>
-        </View>
-      )
+  onSearchTextUpdate = text => {
+    if (text.length < 3) {
+      return
     }
+
+    searchStore
+      .getQuery(text)
+      .then(this.onResults)
+  }
+
+  render () {
+    let searchBar = this.props.searchBar
+      ? <SearchBar
+        ref='search'
+        placeholder='Search'
+        onChangeText={this.onSearchTextUpdate}
+      />
+      : null
 
     return (
       <View style={{flex: 1}}>
+        {searchBar}
         <ListView
           dataSource={this.state.ds}
           renderRow={TouchableRow}
