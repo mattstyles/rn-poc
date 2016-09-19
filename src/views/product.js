@@ -1,10 +1,12 @@
 
 import React, {Component} from 'react'
 import {
-  Text,
   View,
+  ScrollView,
+  Text,
   Image,
-  StyleSheet
+  StyleSheet,
+  Dimensions
 } from 'react-native'
 
 import productStore from '../stores/product'
@@ -28,7 +30,24 @@ const styles = StyleSheet.create({
     padding: 8
   },
   image: {
-
+    width: Dimensions.get('window').width - 16,
+    height: Dimensions.get('window').width - 16
+  },
+  title: {
+    marginTop: 8,
+    fontSize: 28,
+    fontWeight: '300'
+  },
+  sku: {
+    fontSize: 11,
+    color: '#808080',
+    marginTop: 3
+  },
+  price: {
+    fontSize: 36,
+    fontWeight: '700',
+    marginTop: 16,
+    marginBottom: 16
   }
 })
 
@@ -42,7 +61,7 @@ export default class ProductView extends Component {
   }
 
   static navigatorStyle = {
-    drawUnderTabBar: true
+    drawUnderTabBar: false
   }
 
   _isMounted = false
@@ -86,15 +105,23 @@ export default class ProductView extends Component {
       )
     }
 
+    let {product} = this.state
+
     return (
-      <View style={styles.container}>
-        <Image
-          source={{uri: this.state.img}}
-          style={styles.image}
-        />
-        <Text>TODO: Product Page</Text>
-        <Text>{JSON.stringify(this.state.product)}</Text>
-      </View>
+      <ScrollView>
+        <View style={styles.container}>
+          <Image
+            resizeMode='contain'
+            source={{uri: product.img}}
+            style={styles.image}
+          />
+          <Text style={styles.title}>{product.title}</Text>
+          <Text style={styles.sku}>{'Product code:' + product.code}</Text>
+          <Text style={styles.price}>{'£' + product.price + '/each'}</Text>
+          <Text>{product.description}</Text>
+          <Text style={{marginTop: 20, fontSize: 11}}>{JSON.stringify(product)}</Text>
+        </View>
+      </ScrollView>
     )
   }
 }
