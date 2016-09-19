@@ -72,6 +72,16 @@ export default class SearchView extends Component {
     this._isMounted = false
   }
 
+  componentDidMount () {
+    // Tabbed view mounts immediately. Navigator does not currently intercept
+    // tab button clicks. @see https://github.com/wix/react-native-navigation/issues/268
+    // if (!this.props.searchKey) {
+    //   setTimeout(() => {
+    //     this.refs.search.focus()
+    //   }, 1000)
+    // }
+  }
+
   searchMapper = item => {
     return {
       text: item.title,
@@ -83,6 +93,7 @@ export default class SearchView extends Component {
   }
 
   onNavigateTo = item => {
+    this.refs.search.unFocus()
     this.props.navigator.push(Object.assign(ProductView.navigatorOptions, {
       title: item.title,
       passProps: {
@@ -119,12 +130,20 @@ export default class SearchView extends Component {
       .then(this.onResults)
   }
 
+  onSearchCancel = event => {
+    console.log(event)
+    this.refs.search.unFocus()
+  }
+
   render () {
     let searchBar = this.props.searchBar
       ? <SearchBar
         ref='search'
         placeholder='Search'
+        showsCancelButton
         onChangeText={this.onSearchTextUpdate}
+        onCancelButtonPress={this.onSearchCancel}
+        onSearchButtonPress={this.onSearchCancel}
       />
       : null
 
