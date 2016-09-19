@@ -93,7 +93,9 @@ export default class SearchView extends Component {
   }
 
   onNavigateTo = item => {
-    this.refs.search.unFocus()
+    if (this.refs.search) {
+      this.refs.search.unFocus()
+    }
     this.props.navigator.push(Object.assign(ProductView.navigatorOptions, {
       title: item.title,
       passProps: {
@@ -130,8 +132,7 @@ export default class SearchView extends Component {
       .then(this.onResults)
   }
 
-  onSearchCancel = event => {
-    console.log(event)
+  onSearchCancel = () => {
     this.refs.search.unFocus()
   }
 

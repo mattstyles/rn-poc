@@ -20,7 +20,7 @@ export default class NavigationView extends Component {
   }
 
   static navigatorStyle = {
-    drawUnderTabBar: true
+    drawUnderTabBar: false
   }
 
   state = {
