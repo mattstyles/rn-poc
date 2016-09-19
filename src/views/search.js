@@ -3,12 +3,28 @@ import React, {Component} from 'react'
 import {
   View,
   ListView,
-  Text
+  Text,
+  StyleSheet
 } from 'react-native'
 import SearchBar from 'react-native-search-bar'
 
 import TouchableRow from '../components/list/touchableRow'
 import searchStore from '../stores/search'
+
+const styles = StyleSheet.create({
+  loadContainer: {
+    borderBottomWidth: 1,
+    borderBottomColor: '#cfcfcf',
+    backgroundColor: '#ffffff'
+  },
+  load: {
+    paddingLeft: 16,
+    paddingRight: 16,
+    paddingTop: 12,
+    paddingBottom: 13,
+    textAlign: 'center'
+  }
+})
 
 const searchMapper = item => {
   return {
@@ -40,7 +56,8 @@ export default class SearchView extends Component {
   state = {
     ds: new ListView.DataSource({
       rowHasChanged: (a, b) => a !== b
-    })
+    }),
+    isLoading: false
   }
 
   // @TODO Warning: anti-pattern. Handle async loading properly
@@ -50,6 +67,9 @@ export default class SearchView extends Component {
     this._isMounted = true
 
     if (this.props.searchKey) {
+      this.setState({
+        isLoading: true
+      })
       searchStore
         .getCategory(this.props.searchKey)
         .then(this.onResults)
@@ -68,7 +88,8 @@ export default class SearchView extends Component {
     let data = res.map(searchMapper)
 
     this.setState({
-      ds: this.state.ds.cloneWithRows(data)
+      ds: this.state.ds.cloneWithRows(data),
+      isLoading: false
     })
   }
 
@@ -77,6 +98,9 @@ export default class SearchView extends Component {
       return
     }
 
+    this.setState({
+      isLoading: true
+    })
     searchStore
       .getQuery(text)
       .then(this.onResults)
@@ -91,9 +115,16 @@ export default class SearchView extends Component {
       />
       : null
 
+    let loadIndicator = this.state.isLoading
+      ? <View style={styles.loadContainer}>
+        <Text style={styles.load}>Loading...</Text>
+      </View>
+      : null
+
     return (
       <View style={{flex: 1}}>
         {searchBar}
+        {loadIndicator}
         <ListView
           dataSource={this.state.ds}
           renderRow={TouchableRow}
