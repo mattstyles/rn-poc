@@ -2,10 +2,12 @@
 import React, {Component} from 'react'
 import {
   Text,
-  View
+  View,
+  TouchableOpacity
 } from 'react-native'
 
 import NavigationView from './navigation'
+import ProductView from './product'
 
 var lastNavId = null
 
@@ -67,7 +69,18 @@ export default class HomeView extends Component {
   render () {
     return (
       <View style={{flex: 1, padding: 20}}>
-        <Text>Hello</Text>
+        <TouchableOpacity onPress={() => {
+          this.props.navigator.push(Object.assign(ProductView.navigatorOptions, {
+            title: 'Product Test',
+            passProps: {
+              item: {
+                id: 'a1'
+              }
+            }
+          }))
+        }}>
+          <Text>Product quick-link</Text>
+        </TouchableOpacity>
       </View>
     )
   }
