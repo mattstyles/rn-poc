@@ -10,6 +10,7 @@ import BasketView from './basket'
 // Page Views
 import PushView from './pushed'
 import NavigationView from './navigation'
+import ProductView from './product'
 
 const register = View => {
   Navigation.registerComponent(
@@ -25,6 +26,7 @@ export function registerViews () {
     PaymentView,
     BasketView,
     PushView,
-    NavigationView
+    NavigationView,
+    ProductView
   ].forEach(register)
 }

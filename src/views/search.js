@@ -8,6 +8,7 @@ import {
 } from 'react-native'
 import SearchBar from 'react-native-search-bar'
 
+import ProductView from './product'
 import TouchableRow from '../components/list/touchableRow'
 import searchStore from '../stores/search'
 
@@ -25,15 +26,6 @@ const styles = StyleSheet.create({
     textAlign: 'center'
   }
 })
-
-const searchMapper = item => {
-  return {
-    text: item.title,
-    onPress: event => {
-      console.log('Search node pressed:', item)
-    }
-  }
-}
 
 export default class SearchView extends Component {
   static navigatorOptions = {
@@ -80,12 +72,33 @@ export default class SearchView extends Component {
     this._isMounted = false
   }
 
+  searchMapper = item => {
+    return {
+      text: item.title,
+      onPress: event => {
+        console.log('Search node pressed:', item)
+        this.onNavigateTo(item)
+      }
+    }
+  }
+
+  onNavigateTo = item => {
+    this.props.navigator.push(Object.assign(ProductView.navigatorOptions, {
+      title: item.title,
+      passProps: {
+        item: item
+      }
+    }))
+  }
+
   onResults = res => {
     if (!this._isMounted) {
       return
     }
 
-    let data = res.map(searchMapper)
+    // Append navigator and push through the search mapper
+    let data = res
+      .map(this.searchMapper)
 
     this.setState({
       ds: this.state.ds.cloneWithRows(data),
