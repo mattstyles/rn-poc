@@ -88,7 +88,8 @@ export default class SearchView extends Component {
       onPress: event => {
         console.log('Search node pressed:', item)
         this.onNavigateTo(item)
-      }
+      },
+      img: item.img.replace(/http:\/\//, 'https://')
     }
   }
 

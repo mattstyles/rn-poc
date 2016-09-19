@@ -67,7 +67,7 @@ export default class HomeView extends Component {
   render () {
     return (
       <View style={{flex: 1, padding: 20}}>
-        <Text>Hello World</Text>
+        <Text>Hello</Text>
       </View>
     )
   }
