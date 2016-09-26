@@ -71,8 +71,8 @@ export default class HomeView extends Component {
 
   render () {
     return (
-      <View style={{flex: 1, padding: 20}}>
-        <TouchableOpacity onPress={() => {
+      <View style={{flex: 1, paddingTop: 20}}>
+        <TouchableOpacity style={{padding: 20}} onPress={() => {
           this.props.navigator.push(Object.assign(ProductView.navigatorOptions, {
             title: 'Product Test',
             passProps: {
