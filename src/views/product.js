@@ -73,8 +73,6 @@ export default class ProductView extends Component {
   componentWillMount () {
     this._isMounted = true
 
-    console.log('props:', this.props)
-
     productStore
       .getProduct(this.props.item.id)
       .then(this.onData)

@@ -9,6 +9,9 @@ import {
 import NavigationView from './navigation'
 import ProductView from './product'
 
+import FilterList from 'reusable-component/dist/native/filterList'
+// import FilterList from '../components/filterList/filterList.js'
+
 var lastNavId = null
 
 export default class HomeView extends Component {
@@ -81,6 +84,7 @@ export default class HomeView extends Component {
         }}>
           <Text>Product quick-link</Text>
         </TouchableOpacity>
+        <FilterList />
       </View>
     )
   }
